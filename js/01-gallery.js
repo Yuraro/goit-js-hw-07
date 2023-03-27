@@ -25,5 +25,12 @@ function onOpenModal(event) {
     "${currentItem.dataset.source}" width= "800" height= "600">`)
     instance.show()
 
-    console.dir(currentItem.nodeName)
+    document.addEventListener('keydown', onKeyPress);
+
+    function onKeyPress(event) {
+        if (event.code === 'Escape') {
+            instance.close();
+            document.removeEventListener('keydown', onKeyPress);
+        }
+    }
 }
