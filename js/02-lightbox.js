@@ -1,36 +1,35 @@
 import { galleryItems } from './gallery-items.js';
 
-const itemUl = document.querySelector('.gallery');
+const galleryListEllements = document.querySelector('.gallery');
 
-const marupGallery = galleryItems.map(({ preview, original, description }) => {
-    return `<li class="galerry item">
-    <a class="gallery__link" href="${original}">
-    <img class="gallery__image" src=
-"${preview}" data-source="${original}" alt="${description}"></a></li>`;
-}).join('');
+galleryListEllements.innerHTML = makeGallery(galleryItems);
+galleryListEllements.addEventListener("click", onImgClick);
 
-itemUl.insertAdjacentHTML('beforeend', marupGallery)
-
-itemUl.addEventListener('click', onOpenModal);
-
-function onOpenModal(event) {
-    event.preventDefault();
-    const currentItem = event.target;
-
-    if (currentItem.nodeName !== 'IMG') {
+function makeGallery(params) {
+    return params
+        .map((param) => {
+            return `<li class="gallery__item">
+    <a class="gallery__link" href="${param.original}">
+    <img
+        class="gallery__image"
+        src="${param.preview}"
+        alt="${param.preview}"
+    />
+    </a>
+    </li>`;
+        })
+        .join("");
+}
+function onImgClick(event) {
+    if (event.target.className !== "gallery__image") {
         return;
     }
-    const instance = basicLightbox.create(`
-        <img class="gallery__image" src=
-    "${currentItem.dataset.source}" width= "800" height= "600">`)
-    instance.show()
-
-    document.addEventListener('keydown', onKeyPress);
-
-    function onKeyPress(event) {
-        if (event.code === 'Escape') {
-            instance.close();
-            document.removeEventListener('keydown', onKeyPress);
-        }
-    }
+    event.preventDefault();
+    const modal = new SimpleLightbox(`.gallery .gallery__link`, {
+        captionDate: "alt",
+        captionDelay: 250,
+    });
+    console.log(modal);
+    modal.open();
 }
+console.log(galleryItems);
